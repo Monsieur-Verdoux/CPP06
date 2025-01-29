@@ -6,11 +6,11 @@
 #    By: akovalev <akovalev@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/29 12:33:14 by akovalev          #+#    #+#              #
-#    Updated: 2025/01/29 12:34:37 by akovalev         ###   ########.fr        #
+#    Updated: 2025/01/29 12:58:05 by akovalev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME := ScalarConverter
+NAME := convert
 CFLAGS := -Wall -Wextra -Werror
 SRC := main.cpp ScalarConverter.cpp
 OBJ := $(SRC:.cpp=.o)
