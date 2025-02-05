@@ -31,12 +31,12 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& original)
 	return (*this);
 }
 
-//to fix:: 1e1000f, -nan, 1.0e-100f, 1e1000, -0.0, 0.0 
+//to confirm:: 1e1000f,  1.0e-100f, 1e1000, 3.4e38f 3.4e38	1.0e-50f
 
 void ScalarConverter::convert(const std::string& input)
 {
 
-	if (input == "+inf" || input == "-inf" || input == "+inff" || input == "-inff" || input == "nan" || input == "nanf") 
+	if (input == "+inf" || input == "-inf" || input == "+inff" || input == "-inff" || input == "nan" || input == "nanf" || input == "-nan") 
 	{
 		std::cout << "char: impossible" << std::endl;
 		std::cout << "int: impossible" << std::endl;
@@ -99,7 +99,7 @@ void ScalarConverter::convert(const std::string& input)
 	if (is_float) 
 	{
 		std::cout << "char: ";
-		float float_value = std::stof(input_without_f);
+		float float_value = std::strtof(input_without_f.c_str(), nullptr); // does not throw exceptions and instead returns HUGE_VALF or -HUGE_VALF
 		if (float_value < std::numeric_limits<char>::min() || float_value > std::numeric_limits<char>::max() || std::isnan(float_value))
 			std::cout << "impossible" << std::endl;
 		else if (std::isprint(static_cast<char>(float_value)))
@@ -128,29 +128,36 @@ void ScalarConverter::convert(const std::string& input)
 	if (is_double) 
 	{
 		std::cout << "char: ";
-		if (std::stod(input_without_f) < std::numeric_limits<char>::min() || std::stod(input_without_f) > std::numeric_limits<char>::max())
+		double double_value = std::strtod(input_without_f.c_str(), &endptr_dbl);
+		if (double_value < std::numeric_limits<char>::min() || double_value > std::numeric_limits<char>::max())
 			std::cout << "impossible" << std::endl;
-		else if (std::isprint(static_cast<char>(std::stod(input_without_f))))
-			std::cout << "'" << static_cast<char>(std::stod(input_without_f)) << "'" << std::endl;
+		else if (std::isprint(static_cast<char>(double_value)))
+			std::cout << "'" << static_cast<char>(double_value) << "'" << std::endl;
 		else
 			std::cout << "non-displayable" << std::endl;
 		std::cout << "int: ";
-		if (std::stod(input_without_f) < std::numeric_limits<int>::min() || std::stod(input_without_f) > std::numeric_limits<int>::max())
+		if (double_value < std::numeric_limits<int>::min() || double_value > std::numeric_limits<int>::max())
 			std::cout << "impossible" << std::endl;
 		else
-			std::cout << static_cast<int>(std::stod(input_without_f)) << std::endl;
+			std::cout << static_cast<int>(double_value) << std::endl;
 		std::cout << "float: ";
-		if (std::stod(input_without_f) < std::numeric_limits<float>::lowest() || std::stod(input_without_f) > std::numeric_limits<float>::max())
+		if (double_value < std::numeric_limits<float>::lowest() || double_value > std::numeric_limits<float>::max())
 			std::cout << "impossible" << std::endl;
 		else
-			std::cout << static_cast<float>(std::stod(input_without_f)) << "f" << std::endl;
-		std::cout << "double: " << std::stod(input_without_f) << std::endl;
+		{
+			if (static_cast<float>(double_value) == static_cast<int>(double_value))
+				std::cout << static_cast<float>(double_value) << ".0f" << std::endl;
+			else
+				std::cout << static_cast<float>(double_value) << "f" << std::endl;
+		}
+		if (double_value == static_cast<int>(double_value))
+			std::cout << "double: " << double_value << ".0" << std::endl;
+		else
+			std::cout << "double: " << double_value << std::endl;
 		return ;
 	}
-
 	std::cout << "char: impossible" << std::endl;
 	std::cout << "int: impossible" << std::endl;
 	std::cout << "float: impossible" << std::endl;
 	std::cout << "double: impossible" << std::endl;
-
 }
