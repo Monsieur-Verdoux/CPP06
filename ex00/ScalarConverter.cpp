@@ -6,7 +6,7 @@
 /*   By: akovalev <akovalev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:20:49 by akovalev          #+#    #+#             */
-/*   Updated: 2025/02/04 20:32:19 by akovalev         ###   ########.fr       */
+/*   Updated: 2025/03/11 19:46:57 by akovalev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& original)
 	(void)original;
 	return (*this);
 }
-
-//to confirm:: 1e1000f,  1.0e-100f, 1e1000, 3.4e38f 3.4e38	1.0e-50f
 
 void ScalarConverter::convert(const std::string& input)
 {
@@ -141,8 +139,10 @@ void ScalarConverter::convert(const std::string& input)
 		else
 			std::cout << static_cast<int>(double_value) << std::endl;
 		std::cout << "float: ";
-		if (double_value < std::numeric_limits<float>::lowest() || double_value > std::numeric_limits<float>::max())
-			std::cout << "impossible" << std::endl;
+		if (double_value > std::numeric_limits<float>::max())
+			std::cout << "inff" << std::endl;
+		else if (double_value < std::numeric_limits<float>::lowest())
+			std::cout << "-inff" << std::endl;
 		else
 		{
 			if (static_cast<float>(double_value) == static_cast<int>(double_value))
