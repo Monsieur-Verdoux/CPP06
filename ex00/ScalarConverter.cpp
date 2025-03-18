@@ -6,7 +6,7 @@
 /*   By: akovalev <akovalev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:20:49 by akovalev          #+#    #+#             */
-/*   Updated: 2025/03/11 19:46:57 by akovalev         ###   ########.fr       */
+/*   Updated: 2025/03/18 20:40:32 by akovalev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void ScalarConverter::convert(const std::string& input)
 	bool is_int;
 	char *endptr_int;
 	char *endptr_dbl;
+	char *endptr_float;
 
 	long int_val = std::strtol(input.c_str(), &endptr_int, 10); // strtol converts a string to a long int
 	{
@@ -96,8 +97,16 @@ void ScalarConverter::convert(const std::string& input)
 
 	if (is_float) 
 	{
+		float float_value = std::strtof(input_without_f.c_str(), &endptr_float);
+		if (*endptr_float != '\0')
+		{
+			std:: cout << "char: impossible" << std::endl;
+			std:: cout << "int: impossible" << std::endl;
+			std:: cout << "float: impossible" << std::endl;
+			std:: cout << "double: impossible" << std::endl;
+			return ;
+		}
 		std::cout << "char: ";
-		float float_value = std::strtof(input_without_f.c_str(), nullptr); // does not throw exceptions and instead returns HUGE_VALF or -HUGE_VALF
 		if (float_value < std::numeric_limits<char>::min() || float_value > std::numeric_limits<char>::max() || std::isnan(float_value))
 			std::cout << "impossible" << std::endl;
 		else if (std::isprint(static_cast<char>(float_value)))
